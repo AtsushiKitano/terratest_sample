@@ -9,7 +9,7 @@ steps:
     args: ['terragrunt', 'run-all', 'apply', '--terragrunt-non-interactive']
     dir : './src/'
 
-  - id "sleep 120s"
+  - id: "sleep 120s"
     name: 'ubuntu'
     args: ["sleep", "120"]
 
