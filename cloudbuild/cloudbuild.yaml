@@ -19,7 +19,8 @@ steps:
 
   - id: "infra test"
     name: 'gcr.io/$PROJECT_ID/terratest'
-    args: ["go", "test", "-v", "./test"]
+    args: ["go", "test", "-v", "."]
+    dir : './test/'
 
   - id: "terraform destroy"
     name: 'alpine/terragrunt'
