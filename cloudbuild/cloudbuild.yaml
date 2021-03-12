@@ -4,14 +4,14 @@ steps:
     args: ['terragrunt', 'run-all', 'plan']
     dir : './src/'
     env:
-      - "_TF_VAR_project=$PROJECT_ID"
+      - "TF_VAR_project=$PROJECT_ID"
 
   - id: "terraform apply"
     name: 'alpine/terragrunt'
     args: ['terragrunt', 'run-all', 'apply', '--terragrunt-non-interactive']
     dir : './src/'
     env:
-      - "_TF_VAR_project=$PROJECT_ID"
+      - "TF_VAR_project=$PROJECT_ID"
 
   - id: "sleep 120s"
     name: 'ubuntu'
@@ -26,5 +26,5 @@ steps:
     args: ['terragrunt', 'run-all', 'destroy', '--terragrunt-non-interactive']
     dir : './src/'
     env:
-      - "_TF_VAR_project=$PROJECT_ID"
+      - "TF_VAR_project=$PROJECT_ID"
 
