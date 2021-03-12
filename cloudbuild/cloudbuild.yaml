@@ -1,0 +1,26 @@
+steps:
+  - id: "terraform plan"
+    name: 'alpine/terragrunt'
+    args: ['terragrunt', 'run-all', 'plan']
+    dir : './src/'
+
+  - id: "terraform apply"
+    name: 'alpine/terragrunt'
+    args: ['terragrunt', 'run-all', 'apply', '--terragrunt-non-interactive']
+    dir : './src/'
+
+  - id "sleep 120s"
+    name: 'ubuntu'
+    args: ["sleep", "120"]
+
+  - id: "infra test"
+    name: 'gcr.io/$PROJECT_ID/terratest'
+    args: ["go", "test", "-v", "./test"]
+
+  - id: "terraform destroy"
+    name: 'alpine/terragrunt'
+    args: ['terragrunt', 'run-all', 'destroy', '--terragrunt-non-interactive']
+    dir : './src/'
+
+substitutions:
+  _TF_VAR_project: $PROJECT_ID
