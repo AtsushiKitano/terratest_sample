@@ -24,7 +24,7 @@ steps:
     args:
       - -c
       - |
-        go test -v .
+        go mod init && go test -v .
 
   - id: "terraform destroy"
     name: 'alpine/terragrunt'
