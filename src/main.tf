@@ -33,7 +33,7 @@ module "network" {
         {
           type     = "allow"
           protocol = "tcp"
-          ports    = ["22", "80", "443"]
+          ports    = ["80"]
         }
       ]
       log_config_metadata = null
