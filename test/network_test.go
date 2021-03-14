@@ -1,32 +1,41 @@
 package test
 
 import (
-    "testing"
+	"testing"
 
-    "github.com/gruntwork-io/terratest/modules/terraform"
-    "github.com/gruntwork-io/terratest/modules/http-helper"
-    "github.com/stretchr/testify/assert"
+	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/stretchr/testify/assert"
 )
 
-var terraformOptions = &terraform.Options{
-    TerraformDir: "../src/",
-}
-
 func TestNetwork(t *testing.T) {
-    t.Parallel()
-    testNetworkName := terraform.Output(t, terraformOptions, "network")
-    assert.Equal(t, "sample", testNetworkName)
+	t.Parallel()
+	actualNetworkName := terraform.Output(t, terraformOptions, "network_name")
+    actualSubnetName := terraform.Output(t, terraformOptions, "subnetwork_name")
+    actualSubnetRegion := terraform.Output(t, terraformOptions, "subnetwork_region")
+    actualSubnetCidr := terraform.Output(t, terraformOptions, "subnetwork_cidr")
+
+	assert.Equal(t, actualNetworkName, "sample")
+    assert.Equal(t, actualSubnetName, "sample")
+    assert.Equal(t, actualSubnetRegion, "asia-northeast1")
+    assert.Equal(t, actualSubnetCidr, "192.168.10.0/24")
 }
 
-func TestConnection(t *testing.T) {
-    t.Parallel()
-    ip := terraform.Output(t, terraformOptions, "gce_static_ip")
-    url := "http://" + ip + ":80"
+func TestFirewall(t *testing.T) {
+	t.Parallel()
+	actualFirewallName := terraform.Output(t, terraformOptions, "firewall_name")
+	actualFirewallDirection := terraform.Output(t, terraformOptions, "firewall_direction")
+	actualFirewallPriority := terraform.Output(t, terraformOptions, "firewall_priority")
+	actualFirewallProtocol := terraform.Output(t, terraformOptions, "firewall_allow_rules_protocol")
+	actualFirewallPorts := terraform.OutputList(t, terraformOptions, "firewall_allow_rules_ports")
+	actualFirewallSrcRanges := terraform.OutputList(t, terraformOptions, "firewall_src_ranges")
 
-    statusCode, _ := http_helper.HTTPDo(t, "GET", url, nil, nil, nil)
-    expectedCode := 200
+	expected_src_ranges := []string{"0.0.0.0/0"}
+	expected_firewall_ports := []string{"80"}
 
-    if statusCode != expectedCode {
-        t.Errorf("handler returned wrong status code: got %v want %v", statusCode, expectedCode)
-    }
+	assert.Equal(t, actualFirewallName, "ingress-sample")
+	assert.Equal(t, actualFirewallDirection, "INGRESS")
+	assert.Equal(t, actualFirewallSrcRanges, expected_src_ranges)
+	assert.Equal(t, actualFirewallPorts, expected_firewall_ports)
+	assert.Equal(t, actualFirewallPriority, "1000")
+	assert.Equal(t, actualFirewallProtocol, "tcp")
 }
