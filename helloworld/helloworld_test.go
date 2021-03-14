@@ -11,7 +11,7 @@ func TestHelloWorld(t *testing.T) {
     t.Parallel()
 
     terraformOption := &terraform.Options{
-        TerraformDir: "./",
+        TerraformDir: ".",
     }
 
     actual := terraform.Output(t, terraformOption, "helloworld")
