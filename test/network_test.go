@@ -9,33 +9,40 @@ import (
 
 func TestNetwork(t *testing.T) {
 	t.Parallel()
-	actualNetworkName := terraform.Output(t, terraformOptions, "network_name")
-    actualSubnetName := terraform.Output(t, terraformOptions, "subnetwork_name")
-    actualSubnetRegion := terraform.Output(t, terraformOptions, "subnetwork_region")
-    actualSubnetCidr := terraform.Output(t, terraformOptions, "subnetwork_cidr")
 
-	assert.Equal(t, actualNetworkName, "sample")
-    assert.Equal(t, actualSubnetName, "sample")
-    assert.Equal(t, actualSubnetRegion, "asia-northeast1")
-    assert.Equal(t, actualSubnetCidr, "192.168.10.0/24")
+	actualNetworkName := terraform.Output(t, terraformOptions, "network_name")
+	assert.Equal(t, "sample", actualNetworkName)
+
+	actualSubnetName := terraform.Output(t, terraformOptions, "subnetwork_name")
+	assert.Equal(t, "sample", actualSubnetName)
+
+	actualSubnetRegion := terraform.Output(t, terraformOptions, "subnetwork_region")
+	assert.Equal(t, "asia-northeast1", actualSubnetRegion)
+
+	actualSubnetCidr := terraform.Output(t, terraformOptions, "subnetwork_cidr")
+	assert.Equal(t, "192.168.10.0/24", actualSubnetCidr)
 }
 
 func TestFirewall(t *testing.T) {
 	t.Parallel()
+
 	actualFirewallName := terraform.Output(t, terraformOptions, "firewall_name")
+	assert.Equal(t, "ingress-sample", actualFirewallName)
+
 	actualFirewallDirection := terraform.Output(t, terraformOptions, "firewall_direction")
+	assert.Equal(t, "INGRESS", actualFirewallDirection)
+
 	actualFirewallPriority := terraform.Output(t, terraformOptions, "firewall_priority")
+	assert.Equal(t, "1000", actualFirewallPriority)
+
 	actualFirewallProtocol := terraform.Output(t, terraformOptions, "firewall_allow_rules_protocol")
-	actualFirewallPorts := terraform.OutputList(t, terraformOptions, "firewall_allow_rules_ports")
+	assert.Equal(t, "tcp", actualFirewallProtocol)
+
+	expectedSrcRanges := []string{"0.0.0.0/0"}
 	actualFirewallSrcRanges := terraform.OutputList(t, terraformOptions, "firewall_src_ranges")
+	assert.Equal(t, expectedSrcRanges, actualFirewallSrcRanges)
 
-	expected_src_ranges := []string{"0.0.0.0/0"}
-	expected_firewall_ports := []string{"80"}
-
-	assert.Equal(t, actualFirewallName, "ingress-sample")
-	assert.Equal(t, actualFirewallDirection, "INGRESS")
-	assert.Equal(t, actualFirewallSrcRanges, expected_src_ranges)
-	assert.Equal(t, actualFirewallPorts, expected_firewall_ports)
-	assert.Equal(t, actualFirewallPriority, "1000")
-	assert.Equal(t, actualFirewallProtocol, "tcp")
+	expectedFirewallPorts := []string{"80"}
+	actualFirewallPorts := terraform.OutputList(t, terraformOptions, "firewall_allow_rules_ports")
+	assert.Equal(t, expectedFirewallPorts, actualFirewallPorts)
 }

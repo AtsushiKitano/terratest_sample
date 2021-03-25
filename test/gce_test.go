@@ -9,15 +9,19 @@ import (
 
 func TestGCE(t *testing.T) {
 	t.Parallel()
-	actualGCEName := terraform.Output(t, terraformOptions, "gce_name")
-	actualGCEMachineType := terraform.Output(t, terraformOptions, "gce_machine_type")
-	actualGCEZone := terraform.Output(t, terraformOptions, "gce_zone")
-	actualGCEDiskSize := terraform.Output(t, terraformOptions, "gce_boot_disk_size")
-	actualGCEDiskImage := terraform.Output(t, terraformOptions, "gce_boot_disk_image")
 
-	assert.Equal(t, actualGCEName, "sample")
-	assert.Equal(t, actualGCEMachineType, "f1-micro")
-	assert.Equal(t, actualGCEZone, "asia-northeast1-b")
-	assert.Equal(t, actualGCEDiskSize, "20")
-	assert.Contains(t, actualGCEDiskImage, "ubuntu-os-cloud/global/images/ubuntu-2004")
+	actualGCEName := terraform.Output(t, terraformOptions, "gce_name")
+	assert.Equal(t, "sample", actualGCEName)
+
+	actualGCEMachineType := terraform.Output(t, terraformOptions, "gce_machine_type")
+	assert.Equal(t, "f1-micro", actualGCEMachineType)
+
+	actualGCEZone := terraform.Output(t, terraformOptions, "gce_zone")
+	assert.Equal(t, "asia-northeast1-b", actualGCEZone)
+
+	actualGCEDiskSize := terraform.Output(t, terraformOptions, "gce_boot_disk_size")
+	assert.Equal(t, "20", actualGCEDiskSize)
+
+	actualGCEDiskImage := terraform.Output(t, terraformOptions, "gce_boot_disk_image")
+	assert.Contains(t, "ubuntu-os-cloud/ubuntu-2004-lts", actualGCEDiskImage)
 }
